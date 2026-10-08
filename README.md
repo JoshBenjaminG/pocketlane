@@ -1,98 +1,61 @@
-# vinext-starter
+# Pocketlane
 
-A clean full-stack starter running on
-[vinext](https://github.com/cloudflare/vinext), with optional Cloudflare D1 and
-Drizzle support.
+Pocketlane is a private, local-first Game Boy Advance player that runs in a modern browser. Import your own `.gba` files, keep a personal library in IndexedDB, and continue with cartridge saves or save states.
 
-## Prerequisites
+**Pocketlane does not include, host, download, or link to ROMs, BIOS files, Nintendo assets, game artwork, or cryptographic material.** Users are responsible for supplying game files they are authorized to use.
 
-- Node.js `>=22.13.0`
+## Features
 
-## Quick Start
+- Persistent, device-local ROM library
+- Automatic battery-backed cartridge saves
+- Manual save states with thumbnails
+- `.sav` import and export
+- Keyboard and Gamepad API controls
+- Selectable controllers and editable mapping profiles
+- Fullscreen, pixel-perfect, smooth, LCD, and vivid display modes
+- Installable, offline-capable PWA
+- No account, analytics, ROM upload, or server-side game storage
+
+## Privacy model
+
+ROMs, save data, states, and controller profiles remain inside the current browser profile. They are not uploaded to Pocketlane's host. Clearing browser site data removes locally stored games and unexported progress.
+
+## Development
+
+Requirements: Node.js 22.13 or newer.
 
 ```bash
 npm install
 npm run dev
+```
+
+Create a production build with:
+
+```bash
 npm run build
 ```
 
-This starter does not use `wrangler.jsonc`.
+## Controls
 
-## Included Shape
+| GBA input | Keyboard |
+| --- | --- |
+| D-pad | Arrow keys |
+| A | Z |
+| B | X |
+| Start | Enter |
+| Select | Backspace |
+| R / L | A / S |
 
-- edit site code under `app/`
-- `.openai/hosting.json` declares optional Sites D1 and R2 bindings
-- `vite.config.ts` simulates declared bindings for local development
-- `db/schema.ts` starts intentionally empty
-- `examples/d1/` contains an optional D1 example surface
-- `drizzle.config.ts` supports local migration generation when needed
+Gamepad controls can be remapped in the player. Profiles are stored locally.
 
-## Workspace Auth Headers
+## Legal and content policy
 
-OpenAI workspace sites can read the current user's email from
-`oai-authenticated-user-email`.
+Pocketlane is an independent open-source project and is not affiliated with, sponsored by, or endorsed by Nintendo. Game Boy Advance and Nintendo are trademarks of Nintendo Co., Ltd.
 
-SIWC-authenticated workspace sites may also receive
-`oai-authenticated-user-full-name` when the user's SIWC profile has a non-empty
-`name` claim. The full-name value is percent-encoded UTF-8 and is accompanied by
-`oai-authenticated-user-full-name-encoding: percent-encoded-utf-8`.
+The repository is for emulator and user-interface code only. Do not open issues or pull requests that attach ROMs, BIOS dumps, copyrighted game artwork, decryption keys, or links to unauthorized copies. Contributions containing that material will be rejected.
 
-Treat the full name as optional and fall back to email when it is absent:
+The emulator runtime is provided by [`@gba-kit/gba-browser`](https://github.com/macabeus/gba-kit) under the MIT License. See dependency notices for their respective terms.
 
-```tsx
-import { headers } from "next/headers";
+## License
 
-export default async function Home() {
-  const requestHeaders = await headers();
-  const email = requestHeaders.get("oai-authenticated-user-email");
-  const encodedFullName = requestHeaders.get("oai-authenticated-user-full-name");
-  const fullName =
-    encodedFullName &&
-    requestHeaders.get("oai-authenticated-user-full-name-encoding") ===
-      "percent-encoded-utf-8"
-      ? decodeURIComponent(encodedFullName)
-      : null;
-
-  const displayName = fullName ?? email;
-  // ...
-}
-```
-
-## Optional Dispatch-Owned ChatGPT Sign-In
-
-Import the ready-to-use helpers from `app/chatgpt-auth.ts` when the site needs
-optional or required ChatGPT sign-in:
-
-- Use `getChatGPTUser()` for optional signed-in UI.
-- Use `requireChatGPTUser(returnTo)` for server-rendered pages that should send
-  anonymous visitors through Sign in with ChatGPT.
-- Use `chatGPTSignInPath(returnTo)` and `chatGPTSignOutPath(returnTo)` for
-  browser links or actions.
-- Pass a same-origin relative `returnTo` path for the destination after sign-in
-  or sign-out. The helper validates and safely encodes it.
-- Mark protected pages with `export const dynamic = "force-dynamic"` because
-  they depend on per-request identity headers.
-
-Dispatch owns `/signin-with-chatgpt`, `/signout-with-chatgpt`, `/callback`, the
-OAuth cookies, and identity header injection. Do not implement app routes for
-those reserved paths. Routes that do not import and call the helper remain
-anonymous-compatible.
-
-SIWC establishes identity only; it does not prove workspace membership. Use the
-Sites hosting platform's access policy controls for workspace-wide restrictions,
-or enforce explicit server-side membership or allowlist checks.
-
-Use SIWC for account pages, user-specific dashboards, saved records, and write
-actions tied to the current ChatGPT user. Leave public content anonymous.
-
-## Useful Commands
-
-- `npm run dev`: start local development
-- `npm run build`: verify the vinext build output
-- `npm test`: build the starter and verify its rendered loading skeleton
-- `npm run db:generate`: generate Drizzle migrations after schema changes
-
-## Learn More
-
-- [vinext Documentation](https://github.com/cloudflare/vinext)
-- [Drizzle D1 Guide](https://orm.drizzle.team/docs/get-started/d1-new)
+Pocketlane's original source code is licensed under the [MIT License](LICENSE). This license does not grant rights to third-party games, trademarks, firmware, or other copyrighted material.

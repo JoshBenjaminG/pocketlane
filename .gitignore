@@ -40,3 +40,16 @@ next-env.d.ts
 /.wrangler/
 /outputs/
 /work/
+
+# Never commit game, firmware, or save data
+*.gba
+*.gb
+*.gbc
+*.sav
+*.srm
+*.state
+*.bios
+*bios*.bin
+roms/
+ROMs/
+saves/
